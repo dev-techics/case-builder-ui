@@ -1,5 +1,4 @@
-import * as React from 'react';
-
+import { useState, useEffect } from 'react';
 export const MOBILE_BREAKPOINT = 768;
 
 function getIsMobile(breakpoint: number) {
@@ -11,11 +10,11 @@ function getIsMobile(breakpoint: number) {
 }
 
 export function useIsMobile(breakpoint = MOBILE_BREAKPOINT) {
-  const [isMobile, setIsMobile] = React.useState(() =>
+  const [isMobile, setIsMobile] = useState(() =>
     getIsMobile(breakpoint)
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }

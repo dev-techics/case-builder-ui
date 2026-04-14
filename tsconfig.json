@@ -24,10 +24,7 @@
   },
   "include": [
     "index.ts",
-    "src/index.ts",
-    "src/components/ui/**/*",
-    "src/hooks/**/*",
-    "src/lib/**/*"
+    "src/**/*"
   ],
   "exclude": ["dist", "node_modules"]
 }
