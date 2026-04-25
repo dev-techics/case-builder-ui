@@ -8,52 +8,50 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   MoreVertical,
-  FileText,
   FolderOpen,
   Edit,
   Copy,
   Download,
   Trash2,
-  FileStack,
 } from 'lucide-react';
-import type { Bundle, ColorClassMap, StatusColorMap } from '../types/types';
+import type { Bundle, BundleStatus } from '../types';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Files01Icon, Folder02Icon } from '@hugeicons/core-free-icons';
+import BundleStatusMenu from './BundleStatusMenu';
 
 // Component Props Types
-interface BundleCardProps {
+export interface BundleCardProps {
   bundle: Bundle;
+  lastModifiedLabel: string;
+  lastModifiedTitle?: string;
   onOpen: (bundle: Bundle) => void;
-  onEdit?: (bundle: Bundle) => void;
+  onStatusChange: (status: BundleStatus) => void;
+  onRename: (bundle: Bundle) => void;
   onDelete: (bundleId: string | number) => void;
   onDuplicate: (bundle: Bundle) => void;
   onExport?: (bundle: Bundle) => void;
+  isStatusUpdating?: boolean;
 }
 
 const BundleCard = ({
   bundle,
+  lastModifiedLabel,
+  lastModifiedTitle,
   onOpen,
+  onStatusChange,
   onDelete,
   onDuplicate,
+  onRename,
+  onExport,
+  isStatusUpdating = false,
 }: BundleCardProps) => {
-  const statusColors: StatusColorMap = {
-    'In Progress': 'bg-blue-100 text-blue-700',
-    Complete: 'bg-green-100 text-green-700',
-    Review: 'bg-orange-100 text-orange-700',
-    Archived: 'bg-gray-100 text-gray-700',
-  };
-
-  const colorClasses: ColorClassMap = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    orange: 'bg-orange-500',
-    red: 'bg-red-500',
-    yellow: 'bg-yellow-500',
-  };
   const handleCardClick = () => {
     onOpen(bundle);
   };
   const handleDelete = (id: string | number) => {
-    confirm('Are you sure you want to delete this bundle?') && onDelete(id);
+    if (confirm('Are you sure you want to delete this bundle?')) {
+      onDelete(id);
+    }
   };
   const handleDuplicate = () => {
     onDuplicate(bundle);
@@ -61,8 +59,6 @@ const BundleCard = ({
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-200 overflow-hidden group">
-      <div className={`h-2 ${colorClasses[bundle.color]}`} />
-
       <div className="p-5">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
@@ -70,7 +66,10 @@ const BundleCard = ({
               onClick={handleCardClick}
               className="flex items-center gap-2 mb-2 cursor-pointer"
             >
-              <FileStack className="h-5 w-5 text-gray-400" />
+              <HugeiconsIcon
+                className="h-5 w-5 text-gray-500"
+                icon={Folder02Icon}
+              />
               <h3 className="font-semibold text-gray-900 line-clamp-1">
                 {bundle.name}
               </h3>
@@ -95,15 +94,18 @@ const BundleCard = ({
                 <FolderOpen className="h-4 w-4 mr-2" />
                 Open Bundle
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onRename(bundle)}>
                 <Edit className="h-4 w-4 mr-2" />
-                Edit Details
+                Rename
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleDuplicate()}>
                 <Copy className="h-4 w-4 mr-2" />
                 Duplicate
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                disabled={!onExport}
+                onClick={() => onExport?.(bundle)}
+              >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </DropdownMenuItem>
@@ -121,18 +123,18 @@ const BundleCard = ({
 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <FileText className="h-4 w-4" />
-            <span>{bundle.documentCount} documents</span>
+            <HugeiconsIcon className="h-5 w-5" icon={Files01Icon} />
+            <span>{bundle.totalDocuments} documents</span>
           </div>
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[bundle.status]}`}
-          >
-            {bundle.status}
-          </span>
+          <BundleStatusMenu
+            disabled={isStatusUpdating}
+            onChange={onStatusChange}
+            status={bundle.status}
+          />
         </div>
 
-        <div className="text-xs text-gray-500">
-          Last modified: {bundle.updatedAt ?? '—'}
+        <div className="text-xs text-gray-500" title={lastModifiedTitle}>
+          Last modified: {lastModifiedLabel}
         </div>
       </div>
     </div>
