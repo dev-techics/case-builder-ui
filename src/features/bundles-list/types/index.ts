@@ -5,6 +5,23 @@ export const bundleStatuses = [
   'Archived',
 ] as const;
 
+
+/**
+ * Component prop type
+ */
+export interface BundleCardProps {
+  bundle: Bundle;
+  lastModifiedLabel: string;
+  lastModifiedTitle?: string;
+  onOpen: (bundle: Bundle) => void;
+  onStatusChange: (status: BundleStatus) => void;
+  onRename: (bundle: Bundle) => void;
+  onDelete: (bundleId: string | number) => void;
+  onDuplicate: (bundle: Bundle) => void;
+  onExport?: (bundle: Bundle) => void;
+  isStatusUpdating?: boolean;
+}
+
 /**
  * Bundle Status Types
  */
