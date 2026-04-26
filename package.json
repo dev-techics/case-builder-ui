@@ -1,5 +1,5 @@
 {
-  "name": "case-builder-ui",
+  "name": "@case-builder/ui",
   "version": "0.1.0",
   "description": "Shared React UI library for the Case Builder web and desktop apps.",
   "license": "ISC",
