@@ -1,0 +1,4 @@
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+@source "../dist/**/*.{js,mjs,cjs}";

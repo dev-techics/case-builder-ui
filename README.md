@@ -26,7 +26,7 @@ Import the shared library styles into each app's main stylesheet after Tailwind:
 
 ```css
 @import "tailwindcss";
-@import "case-builder-ui/styles.css";
+@import "@case-builder/ui/styles.css";
 ```
 
 The exported stylesheet does three things:
@@ -35,12 +35,20 @@ The exported stylesheet does three things:
 - enables the animation utilities used by the Radix-based components
 - points Tailwind at the built package files so classes from this library are included in the consuming app build
 
-If either app already defines your final design tokens, keep importing `case-builder-ui/styles.css` and override the CSS variables afterward in your own stylesheet.
+If your app already owns the final theme tokens and base styles, import the lighter Tailwind integration file instead:
+
+```css
+@import "tailwindcss";
+@import "@case-builder/ui/tailwind.css";
+```
+
+Use `@case-builder/ui/styles.css` when you want this package's default tokens and global base styles.
+Use `@case-builder/ui/tailwind.css` when you only want Tailwind to see the library classes, plus the shared animation utilities, without overriding your app's existing theme variables or `body` styles.
 
 ## Usage
 
 ```tsx
-import { Button, Card, CardContent, CardHeader, CardTitle } from 'case-builder-ui';
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@case-builder/ui';
 
 export function ExampleCard() {
   return (
